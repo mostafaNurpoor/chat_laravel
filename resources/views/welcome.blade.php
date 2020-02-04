@@ -250,10 +250,12 @@
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 </head>
 <body dir="rtl">
 <div class="messaging">
-    <input type="text" style="display: none" id="threadId" value="">
+    <input type="text" style="display: none"  id="threadId" value="">
     <div class="inbox_msg">
         <div class="inbox_people">
             <div class="inbox_chat scroll">
@@ -276,7 +278,8 @@
         </div>
     </div>
 </div>
-
+<input type="text" id="token" style="display: none" value="<?php echo $_COOKIE['token'] ?>">
+<input type="text" style="display: none" id="receiver_id" >
 <script>
     String.prototype.escape = function() {
         var tagsToReplace = {
@@ -289,7 +292,6 @@
         });
     };
 </script>
-
 <script>
     var userId;
     $.ajax({
@@ -301,6 +303,7 @@
         },
         success: function (msg) {
             userId = msg.id;
+            unSubscribe(userId);
             subscribe(userId);
         }
     });
@@ -328,6 +331,8 @@
     function getChatById(chatId) {
         $('.msg_history').empty();
         $('#threadId').val(chatId);
+        unSubscribe(chatId);
+        subscribe(chatId);
         $.ajax({
             type: 'GET',
             url: 'api/messages/threads/' + chatId + '/messages/1',
@@ -429,13 +434,13 @@
 
 <script src="{{asset('js/app.js')}}"></script>
 <script>
-
     function subscribe(channelId) {
         var objToday = new Date();
         var hour = objToday.getHours() > 12 ? objToday.getHours() : (objToday.getHours() < 10 ? "0" + objToday.getHours() : objToday.getHours());
         var minutes = objToday.getMinutes() < 10 ? "0" + objToday.getMinutes() : objToday.getMinutes();
-        Echo.channel('chat.' + channelId)
+        window.Echo.private('chatChannel.'+channelId)
             .listen('.new.message', (e) => {
+                console.log("hello-->"+e.message.escape());
                 $(".msg_history").append(' ' +
                     '<div class="outgoing_msg">' +
                     '<div class="sent_msg">' +
@@ -448,11 +453,10 @@
             });
     }
 
-    function unSubscribe() {
-        var channelId = document.getElementById('id').value;
+    function unSubscribe(channelId) {
         console.log(channelId);
 
-        Echo.leaveChannel('chat.' + channelId);
+        Echo.leave('chatChannel.' + channelId);
 
     }
 

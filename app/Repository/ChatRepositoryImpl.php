@@ -123,22 +123,22 @@ class ChatRepositoryImpl implements ChatRepository
             myMessage::body => $messageBody,
         ]);
 
-        $userToSendNotification = Participant::where(
-            [
-                [myParticipant::threadId, '=', $threadId],
-                [myParticipant::userId, '!=', $userId],
-            ]
-        )->get();
+//        $userToSendNotification = Participant::where(
+//            [
+//                [myParticipant::threadId, '=', $threadId],
+//                [myParticipant::userId, '!=', $userId],
+//            ]
+//        )->get();
 
-        $user = User::find($userToSendNotification[0]['user_id'])->first();
+       // $user = User::find($userToSendNotification[0]['user_id'])->first();
 
-        if (!$user){
+        if (!$threadId){
 
             abort(404 , "user does not exist");
 
         }
 
-        event(new ChatEvent($messageBody , $user->id));
+        broadcast(new ChatEvent($messageBody , $threadId))->toOthers();
 
         // this comment is for slack and mail , database broadCasting notification
 

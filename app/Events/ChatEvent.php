@@ -11,26 +11,25 @@ use Illuminate\Broadcasting\PrivateChannel;
 
 class ChatEvent implements ShouldBroadcast
 {
-
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
 
-    public $userId ;
+    public $threadId ;
 
-    public function __construct($message , $userId)
+    public function __construct($message , $threadId)
     {
-
         $this->message = $message;
 
-        $this->userId = $userId;
+        $this->threadId = $threadId;
+
     }
 
     public function broadcastOn()
     {
 
-        //return new PrivateChannel('chatChannel' . $this->userId);
-        return new Channel('chat.' . $this->userId);
+        return new PrivateChannel('chatChannel.' . $this->threadId);
+       // return new Channel('chat.' . $this->userId);
 
     }
 

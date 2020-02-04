@@ -11,6 +11,20 @@
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
+
+    {{--<meta name="csrf-token" content="{{ csrf_token() }}">--}}
+
+
+    {{--<script>--}}
+        {{--window.Laravel = {'csrfToken': '{{csrf_token()}}'}--}}
+
+        {{--window.Echo.private('chatChannel.')--}}
+            {{--.listen('new.message', function(e) {--}}
+                {{--console.log("It is working!");--}}
+            {{--});--}}
+
+    {{--</script>--}}
+
 </head>
 <body dir="rtl">
     <div class="container">
@@ -44,7 +58,7 @@
             } ,
             success:function (msg) {
                 setCookie('token' , msg.token_type + " " + msg.access_token , 5);
-                setCookie('userId' , msg.userId , 5);
+                //setCookie('userId' , msg.userId , 5);
                 window.location.href = "http://localhost/laravel/chat/public/";
             }
         });

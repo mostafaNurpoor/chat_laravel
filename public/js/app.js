@@ -29178,11 +29178,23 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "32eb3bccebe6fd8739ac",
   cluster: "eu",
-  forceTLS: true // encrypted: false,
+  forceTLS: false,
+  authEndpoint: 'http://localhost/laravel/chat/public/broadcasting/auth',
+  csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+  auth: {
+    headers: {
+      Authorization: document.getElementById("token").value
+    }
+  } // encrypted: false,
   // wsHost: window.location.hostname,
   // wsPort: 6001,
 
-});
+}); // var receiverId = document.getElementById('receiver_id').value;
+// window.Echo.private(`chatChannel.` + receiverId)
+//     .listen('.new.message', (e) => {
+//         console.log(e);
+//     });
+//console.log(document.getElementById('token').value);
 
 /***/ }),
 

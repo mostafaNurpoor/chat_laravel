@@ -24,8 +24,22 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    forceTLS: true,
+    forceTLS: false,
+    authEndpoint: 'http://localhost/laravel/chat/public/broadcasting/auth',
+    csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+    auth:{
+        headers: {
+            Authorization: document.getElementById("token").value,
+        },
+    },
     // encrypted: false,
     // wsHost: window.location.hostname,
     // wsPort: 6001,
 });
+
+// var receiverId = document.getElementById('receiver_id').value;
+// window.Echo.private(`chatChannel.` + receiverId)
+//     .listen('.new.message', (e) => {
+//         console.log(e);
+//     });
+//console.log(document.getElementById('token').value);
