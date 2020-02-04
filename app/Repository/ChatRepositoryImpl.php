@@ -116,27 +116,19 @@ class ChatRepositoryImpl implements ChatRepository
 
     public function sendNewMessage($userId, $threadId, $messageBody)
     {
+        $threadId = Thread::find($threadId);
+
+        if (!$threadId){
+
+            abort(404 , "thread does not exist with this id");
+
+        }
 
         $message = Message::create([
             myMessage::threadId => $threadId,
             myMessage::userId => $userId,
             myMessage::body => $messageBody,
         ]);
-
-//        $userToSendNotification = Participant::where(
-//            [
-//                [myParticipant::threadId, '=', $threadId],
-//                [myParticipant::userId, '!=', $userId],
-//            ]
-//        )->get();
-
-       // $user = User::find($userToSendNotification[0]['user_id'])->first();
-
-        if (!$threadId){
-
-            abort(404 , "user does not exist");
-
-        }
 
         broadcast(new ChatEvent($messageBody , $threadId))->toOthers();
 
