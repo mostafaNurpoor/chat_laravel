@@ -255,7 +255,7 @@
 </head>
 <body dir="rtl">
 <div class="messaging">
-    <input type="text" style="display: none"  id="threadId" value="">
+    <input type="text"  id="threadId" value="">
     <div class="inbox_msg">
         <div class="inbox_people">
             <div class="inbox_chat scroll">
@@ -278,8 +278,8 @@
         </div>
     </div>
 </div>
-<input type="text" id="token" style="display: none" value="<?php echo $_COOKIE['token'] ?>">
-<input type="text" style="display: none" id="receiver_id" >
+<input type="text" id="token"  value="<?php echo $_COOKIE['token'] ?>">
+<input type="text" id="receiver_id" >
 <script>
     String.prototype.escape = function() {
         var tagsToReplace = {
@@ -329,9 +329,10 @@
     });
 
     function getChatById(chatId) {
+        var previuosChatId = $('#threadId').val();
         $('.msg_history').empty();
         $('#threadId').val(chatId);
-        unSubscribe(chatId);
+        unSubscribe(previuosChatId);
         subscribe(chatId);
         $.ajax({
             type: 'GET',
@@ -341,7 +342,7 @@
                 xhrObj.setRequestHeader("Authorization", "<?php echo $_COOKIE['token'] ?>");
             },
             success: function (msg) {
-                 console.log(msg)
+                console.log(msg)
                 msg.content.data.reverse();
                 for (var i = 0; i < msg.content.data.length; i++) {
                     var date = new Date(msg.content.data[i].created_at);
@@ -453,10 +454,11 @@
             });
     }
 
-    function unSubscribe(channelId) {
-        console.log(channelId);
-        Echo.disconnect();
-       // Echo.leave('chatChannel.' + channelId);
+    function unSubscribe(previousChannelId) {
+        console.log(previousChannelId);
+        // Echo.disconnect();
+
+        Echo.leave('chatChannel.' + previousChannelId);
 
     }
 
