@@ -455,8 +455,8 @@
 
     function unSubscribe(channelId) {
         console.log(channelId);
-
-        Echo.leave('chatChannel.' + channelId);
+        Echo.disconnect();
+       // Echo.leave('chatChannel.' + channelId);
 
     }
 
